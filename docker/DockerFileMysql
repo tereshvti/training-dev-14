@@ -1,0 +1,4 @@
+FROM mysql:8
+
+ADD test_db_structure.sql /docker-entrypoint-initdb.d/1.sql
+ADD test_db_data.sql /docker-entrypoint-initdb.d/2.sql
