@@ -3,10 +3,13 @@
 namespace app\modules\listing\controllers;
 
 use app\modules\listing\helpers\GridHelper;
+use app\modules\listing\helpers\QueryHelper;
 use app\modules\listing\models\Order;
 use app\modules\listing\models\OrderSearch;
 use yii\web\Controller;
+use yii\web\Response;
 use yii2tech\csvgrid\CsvGrid;
+use yii2tech\csvgrid\ExportResult;
 
 /**
  * OrderController
@@ -38,52 +41,24 @@ class OrderController extends Controller
     }
 
     /**
-     * @return \yii\web\Response
+     * @return Response
      * @throws \yii\base\InvalidConfigException
      */
     public function actionExport()
     {
-        $searchModel = new OrderSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-        $dataProvider->setSort(false);
-        $dataProvider->setPagination(['pageSize' => 8000]);
+        /** @var ExportResult $exportResult */
+        $exportResult = \Yii::createObject(['class' => ExportResult::class]);
+        $csvFile = $exportResult->newCsvFile();
+        $csvFile->writeRow(['ID', 'User', 'Link', 'Quantity', 'Service', 'Mode', 'Created']);
 
-        $exporter = new CsvGrid([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-                'id',
-                [
-                    'attribute' => 'user',
-                    'value' => function ($model) {
-                        return $model->user->first_name . ' ' . $model->user->last_name;
-                    }
-                ],
-                'link',
-                'quantity',
-                [
-                    'attribute' => 'service',
-                    'format' => 'html',
-                    'value' => function ($model) {
-                        return sprintf("(%s) %s", $model->service->id, $model->service->name);
-                    },
-                ],
-                [
-                    'attribute' => 'mode',
-                    'value' => function ($model) {
-                        return $model->mode == Order::MODE_AUTO ? \Yii::t('app', 'Auto')
-                            : \Yii::t('app', 'Manual');
-                    },
-                ],
-                [
-                    'attribute' => 'created',
-                    'value' => function ($model) {
-                        return date('Y-m-d H:i:s', $model->created_at);
-                    }
-                ],
-            ],
-        ]);
+        /** @var QueryHelper $queryHelper */
+        $queryHelper =  \Yii::createObject(['class' => QueryHelper::class]);
+        foreach ($queryHelper->getOrderDataForCsvExport($this->request->queryParams) as $rowData) {
+            $csvFile->writeRow($rowData);
+        }
+
         $filename = 'items' . '-' . time() . '.csv';
 
-        return $exporter->export()->send($filename);
+        return $exportResult->send($filename);
     }
 }
