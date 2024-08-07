@@ -3,7 +3,6 @@
 use app\modules\listing\models\Order;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\modules\listing\assets\ListingAssets;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
@@ -14,7 +13,9 @@ use yii\helpers\Url;
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = Yii::t('app', 'Orders');
-ListingAssets::register($this);
+//@TODO find better place to remove BS assets
+Yii::$app->assetManager->bundles['yii\bootstrap5\BootstrapAsset'] = false;
+
 ?>
 <div class="order-index">
 
