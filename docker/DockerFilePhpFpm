@@ -1,3 +1,12 @@
 FROM php:8-fpm
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions pdo_mysql
+RUN install-php-extensions pdo_mysql gd
+
+# install xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+RUN echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'max_execution_time = 300' >> /usr/local/etc/php/conf.d/docker-php-timelimit.ini;
