@@ -2,10 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\modules\listing\models\OrderSearch;
+use listing\models\OrderSearch;
 
 /** @var yii\web\View $this */
-/** @var app\modules\listing\models\OrderSearch $model */
+/** @var listing\models\OrderSearch $model */
 /** @var string|null $statusFilterValue */
 /** @var yii\widgets\ActiveForm $form */
 

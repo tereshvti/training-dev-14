@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\listing\models;
+namespace listing\models;
 
 use Yii;
 

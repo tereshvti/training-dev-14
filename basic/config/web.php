@@ -11,10 +11,11 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@listing'   => '@app/modules/listing',
     ],
     'modules' => [
         'listing' => [
-            'class' => 'app\modules\listing\Module',
+            'class' => 'listing\Module',
         ]
     ],
     'components' => [

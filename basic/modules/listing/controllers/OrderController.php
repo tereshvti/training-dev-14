@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\listing\controllers;
+namespace listing\controllers;
 
-use app\modules\listing\helpers\GridHelper;
-use app\modules\listing\helpers\QueryHelper;
-use app\modules\listing\models\Order;
-use app\modules\listing\models\OrderSearch;
+use listing\helpers\GridHelper;
+use listing\helpers\QueryHelper;
+use listing\models\Order;
+use listing\models\OrderSearch;
 use yii\web\Controller;
 use yii\web\Response;
 use yii2tech\csvgrid\CsvGrid;

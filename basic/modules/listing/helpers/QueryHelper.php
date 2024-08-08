@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\listing\helpers;
+namespace listing\helpers;
 
-use app\modules\listing\models\Order;
-use app\modules\listing\models\OrderSearch;
+use listing\models\Order;
+use listing\models\OrderSearch;
 use yii\db\QueryInterface;
 use yii2tech\csvgrid\ExportResult;
 

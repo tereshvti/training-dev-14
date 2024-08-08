@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\listing;
+namespace listing;
 
 /**
  * listing module definition class
@@ -10,6 +10,6 @@ class Module extends \yii\base\Module
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'app\modules\listing\controllers';
+    public $controllerNamespace = 'listing\controllers';
 
 }

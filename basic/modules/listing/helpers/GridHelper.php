@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\listing\helpers;
+namespace listing\helpers;
 
-use app\modules\listing\models\Order;
-use app\modules\listing\models\Service;
+use listing\models\Order;
+use listing\models\Service;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\Request;

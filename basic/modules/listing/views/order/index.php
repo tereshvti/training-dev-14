@@ -1,13 +1,13 @@
 <?php
 
-use app\modules\listing\models\Order;
+use listing\models\Order;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var app\modules\listing\models\OrderSearch $searchModel */
-/** @var app\modules\listing\helpers\GridHelper $gridHelper */
+/** @var listing\models\OrderSearch $searchModel */
+/** @var listing\helpers\GridHelper $gridHelper */
 /** @var array $orderStatuses */
 /** @var string|null $statusFilterValue */
 /** @var yii\data\ActiveDataProvider $dataProvider */

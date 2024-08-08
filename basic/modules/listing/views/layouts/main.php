@@ -7,7 +7,7 @@ use app\assets\AppAsset;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
-use app\modules\listing\assets\ListingAssets;
+use listing\assets\ListingAssets;
 
 AppAsset::register($this);
 ListingAssets::register($this);

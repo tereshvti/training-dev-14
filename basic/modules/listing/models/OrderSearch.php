@@ -1,12 +1,12 @@
 <?php
 
-namespace app\modules\listing\models;
+namespace listing\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
 /**
- * OrderSearch represents the model behind the search form of `app\modules\listing\models\Order`.
+ * OrderSearch represents the model behind the search form of `listing\models\Order`.
  */
 class OrderSearch extends Order
 {
