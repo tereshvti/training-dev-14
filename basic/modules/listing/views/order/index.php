@@ -16,6 +16,10 @@ $this->title = Yii::t('app', 'Orders');
 //@TODO find better place to remove BS assets
 Yii::$app->assetManager->bundles['yii\bootstrap5\BootstrapAsset'] = false;
 
+$pageCount = $dataProvider->getPagination()->getLimit();
+$totalCount = $dataProvider->getTotalCount();
+$summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {totalCount, number}' : '{totalCount, number}';
+
 ?>
 <div class="order-index">
 
@@ -99,7 +103,7 @@ Yii::$app->assetManager->bundles['yii\bootstrap5\BootstrapAsset'] = false;
             'summaryOptions' => [
                 'class' => 'col-sm-4 pagination-counters',
             ],
-            'summary' => Yii::t('yii','{begin, number} to {end, number} of {totalCount, number}'),
+            'summary' => Yii::t('yii',$summary),
         ]);
         ?>
     </div>

@@ -13,14 +13,23 @@ class QueryHelper
      * @param QueryInterface $query
      * @return array
      */
-    public function getGroupedServiceDataFromQuery(QueryInterface $query)
+    public function getGroupedServiceDataFromQuery(QueryInterface $originalQuery)
     {
-        $originalQuery = clone $query;
-        $originalQuery->groupBy('service_id');
-        $originalQuery->select(['count' => 'COUNT(`' . Order::tableName() . '`.`id`)', 'service_id']);
-        $originalQuery->asArray(true);
+        $query = clone $originalQuery;
+        //remove service ID filter to list all services
+        if (!is_null($query->where)) {
+            foreach ($query->where as $index => $wherePart) {
+                if (is_array($wherePart) && array_key_exists('service_id', $wherePart)) {
+                    unset($query->where[$index]['service_id']);
+                }
+            }
+        }
 
-        return $originalQuery->all();
+        $query->groupBy('service_id');
+        $query->select(['count' => 'COUNT(`' . Order::tableName() . '`.`id`)', 'service_id']);
+        $query->asArray(true);
+
+        return $query->all();
     }
 
     /**
