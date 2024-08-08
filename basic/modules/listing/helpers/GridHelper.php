@@ -3,6 +3,7 @@
 namespace listing\helpers;
 
 use listing\models\Order;
+use listing\models\OrderSearch;
 use listing\models\Service;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -11,15 +12,14 @@ use yii\web\Request;
 class GridHelper
 {
     /**
-     * @param ActiveDataProvider $dataProvider
+     * @param OrderSearch $searchModel
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function getServiceHeaderHtml(ActiveDataProvider $dataProvider)
+    public function getServiceHeaderHtml(OrderSearch $searchModel)
     {
-        $queryHelper = \Yii::createObject(QueryHelper::class);
         $usedServices = [];
-        foreach($queryHelper->getGroupedServiceDataFromQuery($dataProvider->query) as $serviceData) {
+        foreach($searchModel->getGroupedServiceData() as $serviceData) {
             $usedServices[$serviceData['service_id']] = $serviceData['count'];
         }
 

@@ -56,7 +56,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 'link',
                 'quantity',
                 [
-                    'header' => $gridHelper->getServiceHeaderHtml($dataProvider),
+                    'header' =>  $gridHelper->getServiceHeaderHtml($searchModel),
                     'attribute' => 'service',
                     'class' => \yii\grid\DataColumn::class,
                     'format' => 'html',

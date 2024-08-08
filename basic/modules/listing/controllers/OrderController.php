@@ -3,9 +3,9 @@
 namespace listing\controllers;
 
 use listing\helpers\GridHelper;
-use listing\helpers\QueryHelper;
 use listing\models\Order;
 use listing\models\OrderSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 use yii2tech\csvgrid\ExportResult;
@@ -15,7 +15,7 @@ use yii2tech\csvgrid\ExportResult;
  */
 class OrderController extends Controller
 {
-    public $layout = '@app/modules/listing/views/layouts/main.php';
+    public $layout = '@listing/views/layouts/main.php';
 
     /**
      * Lists all Order models.
@@ -41,18 +41,25 @@ class OrderController extends Controller
 
     /**
      * @return Response
-     * @throws \yii\base\InvalidConfigException
+     * @throws Yii\base\InvalidConfigException
      */
     public function actionExport()
     {
         /** @var ExportResult $exportResult */
-        $exportResult = \Yii::createObject(['class' => ExportResult::class]);
+        $exportResult = Yii::createObject(['class' => ExportResult::class]);
         $csvFile = $exportResult->newCsvFile();
-        $csvFile->writeRow(['ID', 'User', 'Link', 'Quantity', 'Service', 'Mode', 'Created']);
+        $csvFile->writeRow([
+            Yii::t('app', 'ID'),
+            Yii::t('app', 'User'),
+            Yii::t('app', 'Link'),
+            Yii::t('app', 'Quantity'),
+            Yii::t('app', 'Service'),
+            Yii::t('app', 'Mode'),
+            Yii::t('app', 'Created')
+        ]);
 
-        /** @var QueryHelper $queryHelper */
-        $queryHelper =  \Yii::createObject(['class' => QueryHelper::class]);
-        foreach ($queryHelper->getOrderDataForCsvExport($this->request->queryParams) as $rowData) {
+        $searchModel = new OrderSearch();
+        foreach ($searchModel->getOrderDataForCsvExport($this->request->queryParams) as $rowData) {
             $csvFile->writeRow($rowData);
         }
 

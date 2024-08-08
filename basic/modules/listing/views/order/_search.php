@@ -24,12 +24,12 @@ use listing\models\OrderSearch;
         <span class="input-group-btn search-select-wrap">
 
         <?=
-            Html::dropDownList('search-type', null, [
+            Html::dropDownList('search_type', null, [
                 OrderSearch::INPUT_NAME_ORDER_ID => 'Order ID',
                 OrderSearch::INPUT_NAME_LINK => 'Link',
                 OrderSearch::INPUT_NAME_USERNAME => 'Username'
             ],
-            ['class' => 'form-control search-select', 'name' => 'search-type'])
+            ['class' => 'form-control search-select', 'name' => 'search_type'])
         ?>
 
             <?= Html::hiddenInput('status', $statusFilterValue, ['id' => 'status']) ?>
