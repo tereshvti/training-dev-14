@@ -6,6 +6,8 @@ use listing\helpers\GridHelper;
 use listing\models\Order;
 use listing\models\OrderSearch;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\Response;
 use yii2tech\csvgrid\ExportResult;
@@ -41,7 +43,8 @@ class OrderController extends Controller
 
     /**
      * @return Response
-     * @throws Yii\base\InvalidConfigException
+     * @throws InvalidConfigException
+     * @throws Exception
      */
     public function actionExport()
     {
@@ -49,13 +52,13 @@ class OrderController extends Controller
         $exportResult = Yii::createObject(['class' => ExportResult::class]);
         $csvFile = $exportResult->newCsvFile();
         $csvFile->writeRow([
-            Yii::t('app', 'ID'),
-            Yii::t('app', 'User'),
-            Yii::t('app', 'Link'),
-            Yii::t('app', 'Quantity'),
-            Yii::t('app', 'Service'),
-            Yii::t('app', 'Mode'),
-            Yii::t('app', 'Created')
+            Yii::t('listing', 'ID'),
+            Yii::t('listing', 'User'),
+            Yii::t('listing', 'Link'),
+            Yii::t('listing', 'Quantity'),
+            Yii::t('listing', 'Service'),
+            Yii::t('listing', 'Mode'),
+            Yii::t('listing', 'Created')
         ]);
 
         $searchModel = new OrderSearch();

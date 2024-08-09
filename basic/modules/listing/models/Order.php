@@ -3,6 +3,7 @@
 namespace listing\models;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -93,7 +94,7 @@ class Order extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {
@@ -101,7 +102,7 @@ class Order extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getService()
     {
@@ -113,11 +114,11 @@ class Order extends ActiveRecord
      */
     public static function getStatusList() {
         return [
-            self::STATUS_PENDING => Yii::t('app', 'Pending'),
-            self::STATUS_IN_PROGRESS => Yii::t('app', 'In progress'),
-            self::STATUS_COMPLETED => Yii::t('app', 'Completed'),
-            self::STATUS_CANCELED => Yii::t('app', 'Canceled'),
-            self::STATUS_ERROR => Yii::t('app', 'Error'),
+            self::STATUS_PENDING => Yii::t('listing', 'Pending'),
+            self::STATUS_IN_PROGRESS => Yii::t('listing', 'In progress'),
+            self::STATUS_COMPLETED => Yii::t('listing', 'Completed'),
+            self::STATUS_CANCELED => Yii::t('listing', 'Canceled'),
+            self::STATUS_ERROR => Yii::t('listing', 'Error'),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace listing\models;
 
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "users".
@@ -38,14 +39,14 @@ class User extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'first_name' => Yii::t('app', 'First Name'),
-            'last_name' => Yii::t('app', 'Last Name'),
+            'id' => Yii::t('listing', 'ID'),
+            'first_name' => Yii::t('listing', 'First Name'),
+            'last_name' => Yii::t('listing', 'Last Name'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getOrders()
     {

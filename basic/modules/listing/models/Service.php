@@ -3,6 +3,7 @@
 namespace listing\models;
 
 use Yii;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "services".
@@ -37,13 +38,13 @@ class Service extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
+            'id' => Yii::t('listing', 'ID'),
+            'name' => Yii::t('listing', 'Name'),
         ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getOrders()
     {

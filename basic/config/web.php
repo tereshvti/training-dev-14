@@ -55,6 +55,15 @@ $config = [
             'rules' => [
             ],
         ],
+        'i18n' => [
+            'translations' => [
+                'listing' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'sourceLanguage' => 'en-US',
+                    'basePath' => '@listing/messages'
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

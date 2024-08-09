@@ -12,7 +12,7 @@ use yii\helpers\Url;
 /** @var string|null $statusFilterValue */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = Yii::t('app', 'Orders');
+$this->title = Yii::t('listing', 'Orders');
 //@TODO find better place to remove BS assets
 Yii::$app->assetManager->bundles['yii\bootstrap5\BootstrapAsset'] = false;
 
@@ -35,7 +35,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 ['class' => $statusFilterValue === (string) $value ? 'active' : '' ]) ?>
             <?php endforeach; ?>
 
-            <?php  echo $this->render('_search', [
+            <?php echo $this->render('_search', [
                 'model' => $searchModel,
                 'statusFilterValue' => $statusFilterValue
             ]); ?>
@@ -56,7 +56,10 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 'link',
                 'quantity',
                 [
-                    'header' =>  $gridHelper->getServiceHeaderHtml($searchModel),
+                    'header' => $this->render('_service_header', [
+                        'model' => $searchModel,
+                        'gridHelper' => $gridHelper
+                    ]),
                     'attribute' => 'service',
                     'class' => \yii\grid\DataColumn::class,
                     'format' => 'html',
@@ -67,10 +70,12 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 ],
                 [
                     'attribute' => 'mode',
-                    'header' => $gridHelper->getModeHeaderHtml(),
+                    'header' => $this->render('_mode_header', [
+                        'gridHelper' => $gridHelper
+                    ]),
                     'value' => function ($model) {
-                        return $model->mode == Order::MODE_AUTO ? Yii::t('app', 'Auto')
-                            : Yii::t('app', 'Manual');
+                        return $model->mode == Order::MODE_AUTO ? Yii::t('listing', 'Auto')
+                            : Yii::t('listing', 'Manual');
                     },
                     'headerOptions' => ['class' => 'dropdown-th']
                 ],
@@ -103,7 +108,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
             'summaryOptions' => [
                 'class' => 'col-sm-4 pagination-counters',
             ],
-            'summary' => Yii::t('yii',$summary),
+            'summary' => Yii::t('listing', $summary),
         ]);
         ?>
     </div>
@@ -111,7 +116,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
         <div class="col-sm-8"></div>
         <div class="col-sm-4 button-area">
             <a href="<?= Url::to(array_merge(['export'], Yii::$app->request->getQueryParams())); ?>"
-               class="btn btn-success" role="button"><?= Yii::t('app', 'Save result') ?></a>
+               class="btn btn-success" role="button"><?= Yii::t('listing', 'Save result') ?></a>
         </div>
     </div>
 </div>

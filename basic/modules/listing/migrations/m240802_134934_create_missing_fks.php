@@ -26,19 +26,4 @@ class m240802_134934_create_missing_fks extends Migration
         $this->dropForeignKey("USER_ID_FK", "orders");
         $this->dropForeignKey("SERVICE_ID_FK", "orders");
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m240802_134934_create_missing_fks cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

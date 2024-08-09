@@ -4,7 +4,8 @@ namespace listing\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use yii\db\QueryInterface;
+use yii\db\ActiveQuery;
+use yii\db\Exception;
 
 class OrderSearch extends Model
 {
@@ -17,7 +18,6 @@ class OrderSearch extends Model
     public $mode;
     public $search;
     public $search_type;
-
 
     /**
      * {@inheritdoc}
@@ -68,7 +68,7 @@ class OrderSearch extends Model
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     protected function prepareBaseQuery()
     {
@@ -117,7 +117,7 @@ class OrderSearch extends Model
     /**
      * @param array $params
      * @return \Generator
-     * @throws \yii\base\InvalidConfigException
+     * @throws Exception
      */
     public function getOrderDataForCsvExport(array $params)
     {
@@ -147,11 +147,41 @@ class OrderSearch extends Model
                     $item['link'],
                     $item['quantity'],
                     sprintf("(%s) %s", $item['service_id'], $item['service_name']),
-                    (int)$item['mode'] === 1 ? \Yii::t('app', 'Auto') : \Yii::t('app', 'Manual'),
+                    (int)$item['mode'] === 1 ? \Yii::t('listing', 'Auto') : \Yii::t('listing', 'Manual'),
                     date('Y-m-d H:i:s', $item['created_at'])
                 ];
                 yield $rowData;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getServiceHeaderData()
+    {
+        $usedServices = [];
+        foreach($this->getGroupedServiceData() as $serviceData) {
+            $usedServices[$serviceData['service_id']] = $serviceData['count'];
+        }
+
+        foreach (Service::find()->all() as $service) {
+            $count = isset($usedServices[$service->id]) ? $usedServices[$service->id] : 0;
+            $liData[] = [
+                'count' => $count,
+                'data' => [
+                    'count' => $count,
+                    'name' => $service->name,
+                    'id' => $service->id,
+                ],
+            ];
+        }
+        //some array functions for sorting by count
+        usort($liData, function($a, $b) {
+            return $b['count'] <=> $a['count'];
+        });
+        $liData = array_column($liData, 'data');
+
+        return $liData;
     }
 }
