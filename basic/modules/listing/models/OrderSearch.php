@@ -2,8 +2,6 @@
 
 namespace listing\models;
 
-use listing\helpers\UrlHelper;
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;

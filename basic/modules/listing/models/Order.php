@@ -54,6 +54,9 @@ class Order extends ActiveRecord
      */
     const STATUS_ERROR = 4;
 
+    /**
+     * List of order statuses as array [code => name]
+     */
     const STATUS_LIST = [
         self::STATUS_PENDING => 'Pending',
         self::STATUS_IN_PROGRESS => 'In Progress',
@@ -62,12 +65,13 @@ class Order extends ActiveRecord
         self::STATUS_ERROR => 'Error',
     ];
 
+    /**
+     * List of order modes as array [code => name]
+     */
     const MODE_LIST = [
         self::MODE_MANUAL => 'Manual',
         self::MODE_AUTO => 'Auto',
     ];
-
-
 
     /**
      * {@inheritdoc}
