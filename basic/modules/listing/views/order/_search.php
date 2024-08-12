@@ -5,7 +5,6 @@ use yii\widgets\ActiveForm;
 use listing\models\OrderSearch;
 
 /** @var yii\web\View $this */
-/** @var listing\models\OrderSearch $model */
 /** @var string|null $statusFilterValue */
 /** @var yii\widgets\ActiveForm $form */
 

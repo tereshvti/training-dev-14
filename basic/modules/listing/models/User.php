@@ -4,6 +4,7 @@ namespace listing\models;
 
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "users".
@@ -12,7 +13,7 @@ use yii\db\ActiveQuery;
  * @property string $first_name
  * @property string $last_name
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord
 {
     /**
      * {@inheritdoc}

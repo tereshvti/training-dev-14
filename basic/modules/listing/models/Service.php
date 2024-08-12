@@ -4,6 +4,7 @@ namespace listing\models;
 
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "services".
@@ -11,7 +12,7 @@ use yii\db\ActiveQuery;
  * @property int $id
  * @property string $name
  */
-class Service extends \yii\db\ActiveRecord
+class Service extends ActiveRecord
 {
     /**
      * {@inheritdoc}

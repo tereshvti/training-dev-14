@@ -2,10 +2,12 @@
 
 namespace listing;
 
+use yii\base\Module as BaseModule;
+
 /**
  * listing module definition class
  */
-class Module extends \yii\base\Module
+class Module extends BaseModule
 {
     /**
      * {@inheritdoc}

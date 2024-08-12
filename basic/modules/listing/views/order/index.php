@@ -1,25 +1,23 @@
 <?php
 
+use listing\helpers\UrlHelper;
 use listing\models\Order;
-use yii\helpers\Html;
+use yii\grid\DataColumn;
 use yii\grid\GridView;
-use yii\helpers\Url;
+use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var listing\models\OrderSearch $searchModel */
-/** @var listing\helpers\GridHelper $gridHelper */
+/** @var array $servicesData */
 /** @var array $orderStatuses */
+/** @var array $orderModes */
 /** @var string|null $statusFilterValue */
+/** @var string $summary */
+/** @var string $saveResultUrl */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = Yii::t('listing', 'Orders');
 //@TODO find better place to remove BS assets
 Yii::$app->assetManager->bundles['yii\bootstrap5\BootstrapAsset'] = false;
-
-$pageCount = $dataProvider->getPagination()->getLimit();
-$totalCount = $dataProvider->getTotalCount();
-$summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {totalCount, number}' : '{totalCount, number}';
-
 ?>
 <div class="order-index">
 
@@ -28,17 +26,14 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
     <div>
         <ul class="nav nav-tabs p-b">
             <li class="<?= is_null($statusFilterValue) ? 'active' : ''?>">
-                <a href="<?= $gridHelper->createUrl('status', NULL, true) ?>">All orders</a>
+                <a href="<?= UrlHelper::createUrl('status', NULL, true) ?>">All orders</a>
             </li>
-            <?php foreach ($orderStatuses as $value => $orderStatus): ?>
-                <?= Html::tag('li', Html::a($orderStatus, $gridHelper->createUrl('status', $value, true)),
-                ['class' => $statusFilterValue === (string) $value ? 'active' : '' ]) ?>
+            <?php foreach ($orderStatuses as $orderStatusData): ?>
+                <?= Html::tag('li', Html::a($orderStatusData['name'], $orderStatusData['url']),
+                ['class' => $statusFilterValue === (string) $orderStatusData['value'] ? 'active' : '' ]) ?>
             <?php endforeach; ?>
 
-            <?php echo $this->render('_search', [
-                'model' => $searchModel,
-                'statusFilterValue' => $statusFilterValue
-            ]); ?>
+            <?php echo $this->render('_search', ['statusFilterValue' => $statusFilterValue]); ?>
         </ul>
     </div>
 
@@ -56,12 +51,9 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 'link',
                 'quantity',
                 [
-                    'header' => $this->render('_service_header', [
-                        'model' => $searchModel,
-                        'gridHelper' => $gridHelper
-                    ]),
+                    'header' => $this->render('_service_header', ['servicesData' => $servicesData]),
                     'attribute' => 'service',
-                    'class' => \yii\grid\DataColumn::class,
+                    'class' => DataColumn::class,
                     'format' => 'html',
                     'value' => function ($model) {
                         return Html::tag('span', $model->service->id, ['class' => 'label-id']) . $model->service->name;
@@ -70,9 +62,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
                 ],
                 [
                     'attribute' => 'mode',
-                    'header' => $this->render('_mode_header', [
-                        'gridHelper' => $gridHelper
-                    ]),
+                    'header' => $this->render('_mode_header', ['orderModes' => $orderModes]),
                     'value' => function ($model) {
                         return $model->mode == Order::MODE_AUTO ? Yii::t('listing', 'Auto')
                             : Yii::t('listing', 'Manual');
@@ -115,7 +105,7 @@ $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {tota
     <div class="row">
         <div class="col-sm-8"></div>
         <div class="col-sm-4 button-area">
-            <a href="<?= Url::to(array_merge(['export'], Yii::$app->request->getQueryParams())); ?>"
+            <a href="<?= $saveResultUrl ?>"
                class="btn btn-success" role="button"><?= Yii::t('listing', 'Save result') ?></a>
         </div>
     </div>

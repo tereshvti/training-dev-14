@@ -1,17 +1,20 @@
 <?php
 
-use listing\models\Order;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var listing\helpers\GridHelper $gridHelper */
+/** @var array $orderModes */
 
-$ul = Html::ul([
-    Html::a(\Yii::t('listing', 'All'), $gridHelper->createUrl('mode', NULL)),
-    Html::a(\Yii::t('listing', 'Manual'), $gridHelper->createUrl('mode', Order::MODE_MANUAL)),
-    Html::a(\Yii::t('listing', 'Auto'), $gridHelper->createUrl('mode', Order::MODE_AUTO)),
-], ['class' => 'dropdown-menu', 'aria-labelledby' => 'dropdownMenu1', 'encode' => false]);
-
+$li = [];
+foreach ($orderModes as $modeData) {
+    $li[] = Html::a($modeData['name'], $modeData['url']);
+}
+$ul = Html::ul($li, [
+        'class' => 'dropdown-menu',
+        'aria-labelledby' => 'dropdownMenu1',
+        'encode' => false
+    ]
+);
 ?>
 
 <div class="dropdown">

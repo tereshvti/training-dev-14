@@ -2,12 +2,14 @@
 
 namespace listing\controllers;
 
-use listing\helpers\GridHelper;
-use listing\models\Order;
+use app\modules\listing\models\OrderExport;
+use app\modules\listing\models\ServiceSearch;
+use listing\helpers\UrlHelper;
 use listing\models\OrderSearch;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii2tech\csvgrid\ExportResult;
@@ -26,18 +28,24 @@ class OrderController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new OrderSearch();
-        $gridHelper = new GridHelper();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $orderSearch = Yii::createObject(OrderSearch::class);
+        $serviceSearch = Yii::createObject(ServiceSearch::class);
+        $dataProvider = $orderSearch->getDataProviderWithSearch($this->request->queryParams);
         $dataProvider->setSort(false);
         $dataProvider->setPagination(['pageSize' => 100]);
+        $pageCount = $dataProvider->getPagination()->getLimit();
+        $totalCount = $dataProvider->getTotalCount();
+        $summary = $totalCount > $pageCount ? '{begin, number} to {end, number} of {totalCount, number}'
+            : '{totalCount, number}';
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
+            'servicesData' => $serviceSearch->getGroupedServiceData($this->request->queryParams),
             'dataProvider' => $dataProvider,
-            'orderStatuses' => Order::getStatusList(),
-            'gridHelper' => $gridHelper,
+            'orderStatuses' => UrlHelper::getStatusList(),
+            'orderModes' => UrlHelper::getModeList(),
             'statusFilterValue' => $this->request->getQueryParam('status'),
+            'summary' => $summary,
+            'saveResultUrl' => Url::to(array_merge(['export'], $orderSearch->getAttributes())), //values are validated
         ]);
     }
 
@@ -48,24 +56,10 @@ class OrderController extends Controller
      */
     public function actionExport()
     {
+        /** @var OrderExport $export */
+        $export = Yii::createObject(['class' => OrderExport::class]);
         /** @var ExportResult $exportResult */
-        $exportResult = Yii::createObject(['class' => ExportResult::class]);
-        $csvFile = $exportResult->newCsvFile();
-        $csvFile->writeRow([
-            Yii::t('listing', 'ID'),
-            Yii::t('listing', 'User'),
-            Yii::t('listing', 'Link'),
-            Yii::t('listing', 'Quantity'),
-            Yii::t('listing', 'Service'),
-            Yii::t('listing', 'Mode'),
-            Yii::t('listing', 'Created')
-        ]);
-
-        $searchModel = new OrderSearch();
-        foreach ($searchModel->getOrderDataForCsvExport($this->request->queryParams) as $rowData) {
-            $csvFile->writeRow($rowData);
-        }
-
+        $exportResult = $export->exportServiceDataToCsv($this->request->queryParams);
         $filename = 'items' . '-' . time() . '.csv';
 
         return $exportResult->send($filename);

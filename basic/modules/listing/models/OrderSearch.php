@@ -2,10 +2,11 @@
 
 namespace listing\models;
 
+use listing\helpers\UrlHelper;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
-use yii\db\Exception;
 
 class OrderSearch extends Model
 {
@@ -37,12 +38,11 @@ class OrderSearch extends Model
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function getDataProviderWithSearch($params)
     {
         $this->loadAndValidate($params);
 
         $query = $this->prepareBaseQuery();
-        $query->andFilterWhere(['service_id' => $this->service_id]);
 
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
@@ -56,10 +56,9 @@ class OrderSearch extends Model
      * @param $params
      * @return void
      */
-    protected function loadAndValidate($params)
+    public function loadAndValidate($params)
     {
-        $this->load($params, '');
-        if (!$this->validate()) {
+        if ($this->load($params, '') && !$this->validate()) {
             foreach ($this->getErrors() as $field => $error) {
                 //reset field
                 $this->$field = null;
@@ -70,7 +69,7 @@ class OrderSearch extends Model
     /**
      * @return ActiveQuery
      */
-    protected function prepareBaseQuery()
+    public function prepareBaseQuery()
     {
         $query = Order::find();
         $query->joinWith(['service', 'user']);
@@ -78,6 +77,7 @@ class OrderSearch extends Model
         $query->andFilterWhere([
             'status' => $this->status,
             'mode' => $this->mode,
+            'service_id' => $this->service_id
         ]);
 
         if (isset($this->search) && isset($this->search_type)) {
@@ -89,7 +89,6 @@ class OrderSearch extends Model
                     $query->andFilterWhere(['like', 'link', $this->search]);
                     break;
                 case self::INPUT_NAME_USERNAME:
-                    $query->joinWith(['user']);
                     $query->andFilterWhere(['like', 'first_name', $this->search]);
                     $query->orFilterWhere(['like', 'last_name', $this->search]);
                     break;
@@ -98,90 +97,5 @@ class OrderSearch extends Model
         $query->orderBy([Order::tableName() . '.id' => SORT_DESC]);
 
         return $query;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGroupedServiceData()
-    {
-        $query = $this->prepareBaseQuery();
-        $query->groupBy('service_id');
-        $query->select(['count' => 'COUNT(`' . Order::tableName() . '`.`id`)', 'service_id']);
-        $query->asArray();
-        $query->orderBy(['service_id' => SORT_ASC]);
-
-        return $query->all();
-    }
-
-    /**
-     * @param array $params
-     * @return \Generator
-     * @throws Exception
-     */
-    public function getOrderDataForCsvExport(array $params)
-    {
-        $this->loadAndValidate($params);
-        $query = $this->prepareBaseQuery();
-        $query->andFilterWhere(['service_id' => $this->service_id]);
-        $count = $query->count();
-        $pageNumber = ceil($count / 10000);
-        $query->select([
-            'id' => 'orders.id',
-            'full_name' => 'CONCAT(users.first_name, " ", users.last_name)',
-            'link',
-            'quantity',
-            'service_id' => 'services.id',
-            'service_name' => 'services.name',
-            'mode',
-            'created_at'
-        ]);
-
-        for ($i = 1; $i <= $pageNumber; $i++) {
-            $query->offset(($pageNumber - 1) * 10000)->limit(10000);
-            $data = $query->createCommand()->queryAll();
-            foreach ($data as $item) {
-                $rowData = [
-                    $item['id'],
-                    $item['full_name'],
-                    $item['link'],
-                    $item['quantity'],
-                    sprintf("(%s) %s", $item['service_id'], $item['service_name']),
-                    (int)$item['mode'] === 1 ? \Yii::t('listing', 'Auto') : \Yii::t('listing', 'Manual'),
-                    date('Y-m-d H:i:s', $item['created_at'])
-                ];
-                yield $rowData;
-            }
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getServiceHeaderData()
-    {
-        $usedServices = [];
-        foreach($this->getGroupedServiceData() as $serviceData) {
-            $usedServices[$serviceData['service_id']] = $serviceData['count'];
-        }
-
-        foreach (Service::find()->all() as $service) {
-            $count = isset($usedServices[$service->id]) ? $usedServices[$service->id] : 0;
-            $liData[] = [
-                'count' => $count,
-                'data' => [
-                    'count' => $count,
-                    'name' => $service->name,
-                    'id' => $service->id,
-                ],
-            ];
-        }
-        //some array functions for sorting by count
-        usort($liData, function($a, $b) {
-            return $b['count'] <=> $a['count'];
-        });
-        $liData = array_column($liData, 'data');
-
-        return $liData;
     }
 }

@@ -53,6 +53,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'orders' => 'listing/order/index',
+                'export' => 'listing/order/export',
             ],
         ],
         'i18n' => [

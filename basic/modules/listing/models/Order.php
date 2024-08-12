@@ -2,7 +2,6 @@
 
 namespace listing\models;
 
-use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -54,6 +53,20 @@ class Order extends ActiveRecord
      *  Status error
      */
     const STATUS_ERROR = 4;
+
+    const STATUS_LIST = [
+        self::STATUS_PENDING => 'Pending',
+        self::STATUS_IN_PROGRESS => 'In Progress',
+        self::STATUS_COMPLETED => 'Completed',
+        self::STATUS_CANCELED => 'Canceled',
+        self::STATUS_ERROR => 'Error',
+    ];
+
+    const MODE_LIST = [
+        self::MODE_MANUAL => 'Manual',
+        self::MODE_AUTO => 'Auto',
+    ];
+
 
 
     /**
@@ -107,18 +120,5 @@ class Order extends ActiveRecord
     public function getService()
     {
         return $this->hasOne(Service::class, ['id' => 'service_id']);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getStatusList() {
-        return [
-            self::STATUS_PENDING => Yii::t('listing', 'Pending'),
-            self::STATUS_IN_PROGRESS => Yii::t('listing', 'In progress'),
-            self::STATUS_COMPLETED => Yii::t('listing', 'Completed'),
-            self::STATUS_CANCELED => Yii::t('listing', 'Canceled'),
-            self::STATUS_ERROR => Yii::t('listing', 'Error'),
-        ];
     }
 }
